@@ -25,6 +25,8 @@ volatile uint16_t sensorReadingInt;
 volatile float sensorReadingVoltage;
 
 // Seletor de planta (1 a 6)
+// 1° ordem [1 ao 4]
+// 2° ordem [5 ao 6]
 int plantaSelecionada = 6;
 
 // Timers FreeRTOS
@@ -69,26 +71,32 @@ void setStepInputReadingCallback(TimerHandle_t xTimer) {
 void setMUXCallback(TimerHandle_t xTimer) {
   switch (plantaSelecionada) {
     case 1: // Planta 1 -> X0
+      // A=0 B=0
       digitalWrite(A_PIN, LOW);
       digitalWrite(B_PIN, LOW);
       break;
     case 2: // Planta 2 -> X1
+      // A=1 B=0
       digitalWrite(A_PIN, HIGH);
       digitalWrite(B_PIN, LOW);
       break;
     case 3: // Planta 3 -> X2
+      // A=0 B=1
       digitalWrite(A_PIN, LOW);
       digitalWrite(B_PIN, HIGH);
       break;
     case 4: // Planta 4 -> X3
+      // A=1 B=1
       digitalWrite(A_PIN, HIGH);
       digitalWrite(B_PIN, HIGH);
       break;
     case 5: // Planta 5 -> Y0
+      // A=0 B=0
       digitalWrite(A_PIN, LOW);
       digitalWrite(B_PIN, LOW);
       break;
     case 6: // Planta 6 -> Y1
+      // A=1 B=0
       digitalWrite(A_PIN, HIGH);
       digitalWrite(B_PIN, LOW);
       break;
@@ -112,7 +120,7 @@ void setup() {
   pinMode(A_PIN, OUTPUT);
   pinMode(B_PIN, OUTPUT);
 
-  // Criar timers
+  // Configurar timers
   getSensorReadingTimer = xTimerCreate(
       "getSensorReadingTimer",
       samplingInterval,
